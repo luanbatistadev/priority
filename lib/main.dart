@@ -23,7 +23,7 @@ class _AlertPriorityAppState extends State<AlertPriorityApp> {
         iconTheme: const IconThemeData(size: 16.0, color: Colors.white),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
-            minimumSize: WidgetStatePropertyAll(
+            minimumSize: MaterialStatePropertyAll(
               Size(110, 40),
             ),
           ),
@@ -81,9 +81,9 @@ class _AlertPriorityAppState extends State<AlertPriorityApp> {
                                     );
                                   },
                                   style: const ButtonStyle(
-                                    backgroundColor: WidgetStatePropertyAll(Colors.red),
+                                    backgroundColor: MaterialStatePropertyAll(Colors.red),
                                   ),
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -105,9 +105,9 @@ class _AlertPriorityAppState extends State<AlertPriorityApp> {
                                     );
                                   },
                                   style: const ButtonStyle(
-                                    backgroundColor: WidgetStatePropertyAll(Colors.amber),
+                                    backgroundColor: MaterialStatePropertyAll(Colors.amber),
                                   ),
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -129,9 +129,9 @@ class _AlertPriorityAppState extends State<AlertPriorityApp> {
                                     );
                                   },
                                   style: const ButtonStyle(
-                                    backgroundColor: WidgetStatePropertyAll(Colors.lightGreen),
+                                    backgroundColor: MaterialStatePropertyAll(Colors.lightGreen),
                                   ),
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
