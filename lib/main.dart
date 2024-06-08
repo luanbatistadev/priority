@@ -4,23 +4,33 @@ import 'alert_messenger.dart';
 
 void main() => runApp(const AlertPriorityApp());
 
-class AlertPriorityApp extends StatelessWidget {
+class AlertPriorityApp extends StatefulWidget {
   const AlertPriorityApp({super.key});
+
+  @override
+  State<AlertPriorityApp> createState() => _AlertPriorityAppState();
+}
+
+class _AlertPriorityAppState extends State<AlertPriorityApp> {
+  final AlertsController _alertsController = AlertsController();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Priority',
+      title: 'Priority App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         iconTheme: const IconThemeData(size: 16.0, color: Colors.white),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
-            minimumSize: MaterialStatePropertyAll(Size(110, 40)),
+            minimumSize: WidgetStatePropertyAll(
+              Size(110, 40),
+            ),
           ),
         ),
       ),
       home: AlertMessenger(
+        notifier: _alertsController.notifier,
         child: Builder(
           builder: (context) {
             return Scaffold(
@@ -35,12 +45,17 @@ class AlertPriorityApp extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Center(
-                        child: Text(
-                          '<Adicione o texto do alerta de prioridade aqui>',
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 16.0,
-                          ),
+                        child: ValueListenableBuilder(
+                          valueListenable: _alertsController.notifier,
+                          builder: (context, value, child) {
+                            return Text(
+                              value?.child ?? 'No alert',
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: 16.0,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -56,17 +71,17 @@ class AlertPriorityApp extends StatelessWidget {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    AlertMessenger.of(context).showAlert(
-                                      alert: const Alert(
+                                    _alertsController.showAlert(
+                                      AlertWidgetDTO(
                                         backgroundColor: Colors.red,
-                                        leading: Icon(Icons.error),
+                                        leading: const Icon(Icons.error),
                                         priority: AlertPriority.error,
-                                        child: Text('Oops, ocorreu um erro. Pedimos desculpas.'),
+                                        child: 'Oops, ocorreu um erro. Pedimos desculpas.',
                                       ),
                                     );
                                   },
                                   style: const ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(Colors.red),
+                                    backgroundColor: WidgetStatePropertyAll(Colors.red),
                                   ),
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.max,
@@ -80,17 +95,17 @@ class AlertPriorityApp extends StatelessWidget {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    AlertMessenger.of(context).showAlert(
-                                      alert: const Alert(
+                                    _alertsController.showAlert(
+                                      AlertWidgetDTO(
                                         backgroundColor: Colors.amber,
-                                        leading: Icon(Icons.warning),
+                                        leading: const Icon(Icons.warning),
                                         priority: AlertPriority.warning,
-                                        child: Text('Atenção! Você foi avisado.'),
+                                        child: 'Atenção! Você foi avisado.',
                                       ),
                                     );
                                   },
                                   style: const ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(Colors.amber),
+                                    backgroundColor: WidgetStatePropertyAll(Colors.amber),
                                   ),
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.max,
@@ -104,17 +119,17 @@ class AlertPriorityApp extends StatelessWidget {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    AlertMessenger.of(context).showAlert(
-                                      alert: const Alert(
+                                    _alertsController.showAlert(
+                                      AlertWidgetDTO(
                                         backgroundColor: Colors.green,
-                                        leading: Icon(Icons.info),
+                                        leading: const Icon(Icons.info),
                                         priority: AlertPriority.info,
-                                        child: Text('Este é um aplicativo escrito em Flutter.'),
+                                        child: 'Este é um aplicativo escrito em Flutter.',
                                       ),
                                     );
                                   },
                                   style: const ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(Colors.lightGreen),
+                                    backgroundColor: WidgetStatePropertyAll(Colors.lightGreen),
                                   ),
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.max,
@@ -134,7 +149,7 @@ class AlertPriorityApp extends StatelessWidget {
                                 vertical: 16.0,
                               ),
                               child: ElevatedButton(
-                                onPressed: AlertMessenger.of(context).hideAlert,
+                                onPressed: _alertsController.hideAlert,
                                 child: const Text('Hide alert'),
                               ),
                             ),
@@ -150,5 +165,37 @@ class AlertPriorityApp extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _alertsController.dispose();
+    super.dispose();
+  }
+}
+
+class AlertsController {
+  final ValueNotifier<AlertWidgetDTO?> notifier = ValueNotifier(null);
+  final List<AlertWidgetDTO> alerts = [];
+
+  AlertWidgetDTO? get firstAlert => alerts.isNotEmpty ? alerts.first : null;
+
+  void showAlert(AlertWidgetDTO value) {
+    if (alerts.contains(value)) return;
+    alerts.add(value);
+
+    alerts.sort((a, b) => a.priority.index.compareTo(b.priority.index));
+    notifier.value = firstAlert;
+  }
+
+  void hideAlert() {
+    if (alerts.isNotEmpty) {
+      alerts.removeAt(0);
+    }
+    notifier.value = firstAlert;
+  }
+
+  void dispose() {
+    notifier.dispose();
   }
 }
