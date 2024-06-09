@@ -29,6 +29,7 @@ class _AlertPriorityAppState extends State<AlertPriorityApp> {
           ),
         ),
       ),
+      debugShowCheckedModeBanner: false,
       home: AlertMessenger(
         notifier: _alertsController.notifier,
         child: Builder(
@@ -72,10 +73,7 @@ class _AlertPriorityAppState extends State<AlertPriorityApp> {
                                 ElevatedButton(
                                   onPressed: () {
                                     _alertsController.showAlert(
-                                      AlertWidgetDTO(
-                                        backgroundColor: Colors.red,
-                                        leading: const Icon(Icons.error),
-                                        priority: AlertPriority.error,
+                                      const AlertWidgetDTO.error(
                                         child: 'Oops, ocorreu um erro. Pedimos desculpas.',
                                       ),
                                     );
@@ -96,10 +94,7 @@ class _AlertPriorityAppState extends State<AlertPriorityApp> {
                                 ElevatedButton(
                                   onPressed: () {
                                     _alertsController.showAlert(
-                                      AlertWidgetDTO(
-                                        backgroundColor: Colors.amber,
-                                        leading: const Icon(Icons.warning),
-                                        priority: AlertPriority.warning,
+                                      const AlertWidgetDTO.warning(
                                         child: 'Atenção! Você foi avisado.',
                                       ),
                                     );
@@ -120,16 +115,15 @@ class _AlertPriorityAppState extends State<AlertPriorityApp> {
                                 ElevatedButton(
                                   onPressed: () {
                                     _alertsController.showAlert(
-                                      AlertWidgetDTO(
-                                        backgroundColor: Colors.green,
-                                        leading: const Icon(Icons.info),
-                                        priority: AlertPriority.info,
+                                      const AlertWidgetDTO.info(
                                         child: 'Este é um aplicativo escrito em Flutter.',
                                       ),
                                     );
                                   },
                                   style: const ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(Colors.lightGreen),
+                                    backgroundColor: MaterialStatePropertyAll(
+                                      Colors.lightGreen,
+                                    ),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,

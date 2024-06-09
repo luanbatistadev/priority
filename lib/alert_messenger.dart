@@ -15,39 +15,40 @@ class Alert extends StatelessWidget {
       child: Ink(
         color: alertDTO.backgroundColor,
         height: kAlertHeight + statusbarHeight,
-        child: Padding(
-          padding: alertDTO.padding,
-          child: Column(
-            children: [
-              SizedBox(height: statusbarHeight),
-              Expanded(
-                child: Row(
-                  children: [
-                    SizedBox(width: alertDTO.margin.left),
-                    IconTheme(
-                      data: const IconThemeData(
-                        color: Colors.white,
-                        size: 36,
-                      ),
-                      child: alertDTO.leading,
+        child: Column(
+          children: [
+            SizedBox(height: statusbarHeight),
+            Expanded(
+              child: Row(
+                children: [
+                  const SizedBox(width: 28),
+                  IconTheme(
+                    data: const IconThemeData(
+                      color: Colors.white,
+                      size: 36,
                     ),
-                    SizedBox(width: alertDTO.margin.horizontal),
-                    Expanded(
+                    child: Icon(alertDTO.leading),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DefaultTextStyle(
+                      style: const TextStyle(color: Colors.white),
                       child: Text(
                         alertDTO.child,
-                        style: alertDTO.textStyle,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(height: alertDTO.margin.bottom),
-            ],
-          ),
+            ),
+            const SizedBox(width: 28),
+          ],
         ),
       ),
     );
   }
+
+  
 }
 
 class AlertMessenger extends StatefulWidget {
@@ -199,18 +200,30 @@ class AlertWidgetDTO {
   final Color backgroundColor;
   final AlertPriority priority;
   final String child;
-  final Widget leading;
-  final EdgeInsets margin;
-  final EdgeInsets padding;
-  final TextStyle textStyle;
+  final IconData leading;
 
   AlertWidgetDTO({
     required this.backgroundColor,
     required this.priority,
     required this.child,
     required this.leading,
-    this.margin = const EdgeInsets.all(16.0),
-    this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-    this.textStyle = const TextStyle(color: Colors.white),
   });
+
+  const AlertWidgetDTO.error({
+    required this.child,
+  })  : priority = AlertPriority.error,
+        backgroundColor = Colors.red,
+        leading = Icons.error;
+
+  const AlertWidgetDTO.warning({
+    required this.child,
+  })  : priority = AlertPriority.warning,
+        backgroundColor = Colors.amber,
+        leading = Icons.warning;
+
+  const AlertWidgetDTO.info({
+    required this.child,
+  })  : priority = AlertPriority.info,
+        backgroundColor = Colors.green,
+        leading = Icons.info;
 }
